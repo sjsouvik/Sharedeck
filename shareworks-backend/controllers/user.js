@@ -35,3 +35,24 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
+
+exports.updateConnections = async (req, res) => {
+  try {
+    const { followingUserId } = req.body;
+    await User.updateOne(
+      { _id: req.user._id },
+      { $push: { following: followingUserId } }
+    );
+
+    await User.updateOne(
+      { _id: followingUserId },
+      { $push: { followers: req.user._id } }
+    );
+
+    res.json({ message: "Successfully updated the connections" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error occured", errorMessage: error.message });
+  }
+};
