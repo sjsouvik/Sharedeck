@@ -1,0 +1,56 @@
+.form {
+  width: 30%;
+  margin: auto;
+}
+
+.form-button {
+  width: 80%;
+}
+
+.password {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 4rem;
+}
+
+.show-password {
+  cursor: pointer;
+  position: absolute;
+  top: 0.4rem;
+  right: 2.75rem;
+}
+
+.input-error {
+  color: red;
+  margin-top: 0;
+  font-size: 0.9rem;
+}
+
+@media only screen and (max-width: 850px) {
+  .form {
+    width: 50%;
+    /* width: 70%; */
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .form {
+    width: 60%;
+    /* width: 80%; */
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .form {
+    width: 90%;
+    /* width: 100%; */
+    padding: 0.5rem;
+  }
+}
+
+.link-login {
+  text-decoration: none;
+  color: var(--primary-color);
+}

@@ -1,0 +1,32 @@
+.App {
+  font-family: Roboto, sans-serif;
+  text-align: center;
+}
+
+.sw-navigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  background-color: white;
+  color: var(--primary-color);
+}
+
+.sw-navigation a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+main {
+  position: relative;
+  top: 6.5rem;
+}
+
+.width-page {
+  width: 60%;
+  margin: auto;
+}
