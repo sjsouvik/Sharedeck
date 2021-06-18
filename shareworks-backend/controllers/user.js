@@ -39,15 +39,32 @@ exports.getAllUsers = async (req, res) => {
 exports.updateConnections = async (req, res) => {
   try {
     const { followingUserId } = req.body;
-    await User.updateOne(
-      { _id: req.user._id },
-      { $push: { following: followingUserId } }
+
+    const isFollowedBefore = req.user.following.find(
+      (user) => user._id == followingUserId
     );
 
-    await User.updateOne(
-      { _id: followingUserId },
-      { $push: { followers: req.user._id } }
-    );
+    if (isFollowedBefore) {
+      await User.updateOne(
+        { _id: req.user._id },
+        { $pull: { following: followingUserId } }
+      );
+
+      await User.updateOne(
+        { _id: followingUserId },
+        { $pull: { followers: req.user._id } }
+      );
+    } else {
+      await User.updateOne(
+        { _id: req.user._id },
+        { $push: { following: followingUserId } }
+      );
+
+      await User.updateOne(
+        { _id: followingUserId },
+        { $push: { followers: req.user._id } }
+      );
+    }
 
     res.json({ message: "Successfully updated the connections" });
   } catch (error) {
