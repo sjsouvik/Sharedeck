@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./Compose.css";
-
-import person from "../../../assets/person.svg";
 
 import { postAdded } from "../postsSlice";
 
 const Compose = () => {
+  const { user, token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [postContent, setPostContent] = useState("");
@@ -15,20 +14,21 @@ const Compose = () => {
 
   return (
     <div className="width-page">
-      <h3 className="heading width-md">Compose</h3>
+      <div className="heading width-md">Compose</div>
       <div className="btn-row width-md">
-        {/* <img src={person} alt="user-logo" style={{ height: "1.5rem" }} /> */}
-        <div class="avatar avatar-icn">
-          <p className="avatar-text">SJ</p>
+        <div class="avatar">
+          <p className="avatar-text">
+            {user.firstName.charAt(0) + user.lastName.charAt(0)}
+          </p>
         </div>
         <button
           className={
             btnDisable
-              ? "btn btn-primary btn-post btn-disable"
-              : "btn btn-primary btn-post"
+              ? "btn-primary btn-post btn-disable"
+              : "btn-primary btn-post"
           }
           onClick={() => {
-            dispatch(postAdded(postContent));
+            dispatch(postAdded({ postContent, userId: user._id, token }));
             navigate("/");
           }}
           disabled={btnDisable}
@@ -40,7 +40,7 @@ const Compose = () => {
         cols="30"
         rows="8"
         placeholder="What's on your mind..."
-        className="form-control textarea-control"
+        className="input-control textarea-control"
         onChange={(e) => setPostContent(e.target.value)}
       ></textarea>
     </div>

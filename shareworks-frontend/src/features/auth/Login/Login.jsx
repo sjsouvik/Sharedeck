@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { loginWithCreds } from "../authSlice";
@@ -7,8 +7,9 @@ import { loginWithCreds } from "../authSlice";
 import "./Login.css";
 
 const Login = () => {
-  const auth = useSelector((state) => state.auth);
+  const { status, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +18,14 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
 
-    dispatch(loginWithCreds({ email, password }));
+    await dispatch(loginWithCreds({ email, password }));
+    navigate("/");
   };
 
   return (
     <form className="form" onSubmit={loginHandler}>
       <h3>Log in to your account</h3>
-      <p className="input-error">{auth.error}</p>
+      <p className="input-error">{error}</p>
       <div>
         <input
           type="email"
@@ -55,7 +57,16 @@ const Login = () => {
         )}
       </div>
 
-      <button className="btn btn-primary form-button">LOGIN</button>
+      <button
+        className={
+          status === "loading"
+            ? "btn btn-primary form-button btn-disable"
+            : "btn btn-primary form-button"
+        }
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? "Loggin in" : "LOGIN"}
+      </button>
       <p>
         Not an user yet?{" "}
         <Link to="/signup" className="link-login">

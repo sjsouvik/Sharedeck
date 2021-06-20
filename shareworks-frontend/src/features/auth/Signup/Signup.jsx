@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { loginWithCreds, signup } from "../authSlice";
 
@@ -16,6 +16,9 @@ const Signup = () => {
   const [formErrors, setFormErrors] = useState({});
 
   const dispatch = useDispatch();
+  const { signupStatus, signupError } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   const handleFormValidation = () => {
     let isFormValid = true;
@@ -49,14 +52,12 @@ const Signup = () => {
     e.preventDefault();
 
     if (handleFormValidation()) {
-      dispatch(signup(firstName, lastName, email, password));
+      await dispatch(
+        signup({ firstName, lastName, username, email, password })
+      );
 
-      //ToDo: error handling
-      // if (response.error) {
-      //   return setFormErrors({ emailError: response.message });
-      // }
-
-      dispatch(loginWithCreds(email, password));
+      await dispatch(loginWithCreds({ email, password }));
+      navigate("/");
     }
   };
 
@@ -71,6 +72,7 @@ const Signup = () => {
   return (
     <form className="form" onSubmit={signupHandler}>
       <h3>Create your account</h3>
+      <p className="input-error">{signupError}</p>
       <input
         type="text"
         className="form-control"
@@ -140,7 +142,16 @@ const Signup = () => {
         <p className="input-error">{passwordError}</p>
       )}
 
-      <button className="btn btn-primary form-button">SIGNUP</button>
+      <button
+        className={
+          signupStatus === "loading"
+            ? "btn btn-primary form-button btn-disable"
+            : "btn btn-primary form-button"
+        }
+        disabled={signupStatus === "loading"}
+      >
+        {signupStatus === "loading" ? "Signing up" : "SIGNUP"}
+      </button>
       <p>
         Already have an account?{" "}
         <Link to="/login" className="link-login">

@@ -1,74 +1,69 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const loadPosts = createAsyncThunk("posts/getPosts", async () => {
-  const response = await axios.get(`${process.env.REACT_APP_BACKEND}/post`);
+//to get the feed for the user
+export const loadPosts = createAsyncThunk(
+  "posts/getPosts",
+  async ({ userId, token }) => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND}/post/${userId}`,
+      { headers: { authorization: `Bearer ${token}` } }
+    );
 
-  return response.status === 200 && response.data;
-});
+    return response.data;
+  }
+);
+
+export const postAdded = createAsyncThunk(
+  "posts/addPost",
+  async ({ postContent, userId, token }) => {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BACKEND}/post/${userId}`,
+      { caption: postContent },
+      { headers: { authorization: `Bearer ${token}` } }
+    );
+
+    return response.data;
+  }
+);
+
+export const userReacted = createAsyncThunk(
+  "posts/addReaction",
+  async ({ reaction, postId, userId, token }) => {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BACKEND}/post/${postId}/${userId}`,
+      { reaction },
+      { headers: { authorization: `Bearer ${token}` } }
+    );
+
+    return response.data;
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
-    posts: [
-      {
-        id: "1",
-        caption: "Just now signed up. My 1st koo",
-        date: "today",
-        reactions: {
-          thumbsUp: 2,
-          hooray: 4,
-          heart: 6,
-          rocket: 10,
-          eyes: 20,
-        },
-        user: {
-          username: "tanaypratap",
-          firstName: "Tanay",
-          lastName: "Pratap",
-        },
-      },
-      {
-        id: "2",
-        caption:
-          "India gave USA and other western countries hydroxychloroquine at the peak of their Covid-19 crisis. The West is giving us patronising lectures and sermons while holding up raw materials for vaccines during our peak. And dancing over the corpses.",
-        date: "today",
-        reactions: {
-          thumbsUp: 2,
-          hooray: 4,
-          heart: 16,
-          rocket: 15,
-          eyes: 20,
-        },
-        user: {
-          username: "sjsouvik",
-          firstName: "Souvik",
-          lastName: "Jana",
-        },
-      },
-    ],
+    posts: [],
     status: "idle",
     error: null,
   },
   reducers: {
-    reactionAdded: (state, action) => {
-      const post = state.posts.find(
-        (post) => post.id === action.payload.postId
+    reactionAdded: (state, { payload: { postId, userId, reaction } }) => {
+      const post = state.posts.find((post) => post._id === postId);
+      const isUserReactedBefore = post.reactions[reaction].find(
+        (uid) => uid === userId
       );
-      post.reactions[action.payload.reaction] += 1;
+
+      const userIndex = post.reactions[reaction].findIndex(
+        (uid) => uid === userId
+      );
+      isUserReactedBefore
+        ? post.reactions[reaction].splice(userIndex, 1)
+        : post.reactions[reaction].push(userId);
     },
-    postAdded: (state, action) => {
-      const newPost = {
-        id: state.posts.length + 1,
-        caption: action.payload,
-        reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
-        user: {
-          userId: "sjsouvik",
-          firstName: "Souvik",
-          lastName: "Jana",
-        },
-      };
-      state.posts.push(newPost);
+    userLoggedOut: (state) => {
+      state.status = "idle";
+      state.posts = [];
     },
   },
   extraReducers: {
@@ -77,14 +72,18 @@ const postsSlice = createSlice({
     },
     [loadPosts.fulfilled]: (state, action) => {
       state.status = "fulfilled";
+      state.error = null;
       state.posts = action.payload.posts;
     },
     [loadPosts.rejected]: (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     },
+    [postAdded.fulfilled]: (state) => {
+      state.status = "idle";
+    },
   },
 });
 
-export const { reactionAdded, postAdded } = postsSlice.actions;
+export const { reactionAdded, userLoggedOut } = postsSlice.actions;
 export default postsSlice.reducer;

@@ -2,11 +2,11 @@ import { Navigate, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ path, ...props }) => {
-  const authToken = useSelector((state) => state.auth.token);
+  const { token } = useSelector((state) => state.auth);
 
   return (
     <div>
-      {authToken ? (
+      {token ? (
         <Route path={path} {...props} />
       ) : (
         <Navigate state={{ from: path }} replace to="/login" />

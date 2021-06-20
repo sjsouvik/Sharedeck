@@ -1,23 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const signup = createAsyncThunk(
-  "auth/singup",
-  async (firstName, lastName, username, email, password) => {
-    const response = await axios.post(
-      `${process.env.REACT_APP_BACKEND}/signup`,
-      {
-        firstName,
-        lastName,
-        username,
-        email,
-        password,
-      }
-    );
+export const signup = createAsyncThunk("auth/signup", async (signupData) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BACKEND}/signup`,
+    signupData
+  );
 
-    return response.status === 200 && response.data;
-  }
-);
+  return response.data;
+});
 
 export const loginWithCreds = createAsyncThunk(
   "auth/login",
@@ -27,8 +18,7 @@ export const loginWithCreds = createAsyncThunk(
       credentials
     );
 
-    console.log(response);
-    return response.status === 200 && response.data;
+    return response.data;
   }
 );
 
@@ -39,7 +29,7 @@ const { token, user } = JSON.parse(localStorage?.getItem("login")) || {
 
 const setupAuthHeaderForServiceCalls = (token) => {
   if (token) {
-    return (axios.defaults.headers.common["Authorization"] = token);
+    return (axios.defaults.headers.common["Authorization"] = "Bearer " + token);
   }
 
   delete axios.defaults.headers.common["Authorization"];
@@ -52,12 +42,14 @@ const authSlice = createSlice({
     token: token,
     status: "idle",
     error: null,
+    signupStatus: "idle",
+    signupError: null,
   },
   reducers: {
     logout: (state, action) => {
       localStorage?.removeItem("login");
       state.token = null;
-      setupAuthHeaderForServiceCalls(null);
+      // setupAuthHeaderForServiceCalls(null);
     },
   },
   extraReducers: {
@@ -67,28 +59,49 @@ const authSlice = createSlice({
     [loginWithCreds.fulfilled]: (state, action) => {
       const { user, token } = action.payload;
       state.status = "fulfilled";
+      state.error = null;
       state.user = user;
       state.token = token;
       localStorage?.setItem("login", JSON.stringify({ token, user }));
-      setupAuthHeaderForServiceCalls(token);
+      // setupAuthHeaderForServiceCalls(token);
     },
     [loginWithCreds.rejected]: (state, action) => {
+      const errorMessage = action.error.message;
+      const statusCode = errorMessage.substring(errorMessage.length - 3);
+
       state.status = "error";
-      state.error = action.error.message;
+
+      if (statusCode === "401" || statusCode === "400") {
+        state.error = "Invalid email and password combination";
+      } else if (statusCode !== "200") {
+        state.error = "Something went wrong";
+      }
     },
     [signup.pending]: (state) => {
-      state.status = "signing up";
+      state.signupStatus = "loading";
     },
     [signup.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
+      state.signupStatus = "fulfilled";
+      state.signupError = null;
     },
     [signup.rejected]: (state, action) => {
-      state.status = "error";
-      state.error = action.error.message;
+      const errorMessage = action.error.message;
+      const statusCode = errorMessage.substring(errorMessage.length - 3);
+      console.log(statusCode);
+
+      state.signupStatus = "error";
+
+      if (statusCode === "422") {
+        state.signupError = "Give a valid email to register";
+      } else if (statusCode === "409") {
+        state.signupError = "This email/username is already registered";
+      } else if (statusCode !== "200") {
+        state.signupError = "Something went wrong";
+      }
     },
   },
 });
 
-// export const {} = authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

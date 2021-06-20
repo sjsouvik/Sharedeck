@@ -6,11 +6,14 @@
 .heading {
   text-align: left;
   font-size: 1.2rem;
-  margin-bottom: 1.75rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+  font-weight: bold;
 }
 
 .avatar {
   background-color: var(--primary-color);
+  border-radius: 50%;
 }
 
 .avatar-text {
@@ -32,12 +35,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .btn-post {
-  border-radius: 1.5rem;
+  outline: none;
+  margin: 0.25rem;
   padding: 0.35rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 1.5rem;
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+
+  /* border-radius: 1.5rem;
+  padding: 0.35rem 1.5rem; */
 }
 
 .btn-disable {

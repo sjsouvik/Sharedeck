@@ -1,31 +1,14 @@
 .post {
-  border: 1px solid black;
-  border-radius: 0.25rem;
+  border-bottom: 1px solid #e0e0e0;
   padding: 1rem 0.5rem;
-  /* margin: auto; */
-  margin-bottom: 1rem;
-  /* width: 70%; */
   text-align: left;
   font-size: 1.2rem;
   line-height: 1.75rem;
-
   display: flex;
 }
 
-.user-name {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.user-id {
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.link {
-  text-decoration: none;
-  color: black;
+.post:hover {
+  background-color: #f7fafc;
 }
 
 .mr-1 {
