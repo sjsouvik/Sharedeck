@@ -19,7 +19,13 @@
   align-items: flex-start;
 }
 
-.btn-follow {
-  border-radius: 1.5rem;
-  padding: 0.35rem 1.5rem;
+.btn-outline-follow {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background-color: transparent;
+}
+
+.btn-outline-follow:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color);
 }

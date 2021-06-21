@@ -34,7 +34,7 @@ export default function App() {
       <nav className="sw-navigation">
         <div className="brand">
           <h3 className="nav-brand">
-            <Link to="/">Shareworks</Link>
+            <Link to="/">Sharedeck</Link>
           </h3>
         </div>
 

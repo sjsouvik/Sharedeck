@@ -79,8 +79,8 @@ const People = () => {
               <button
                 className={
                   loggedInUser.following.find((User) => User._id === user._id)
-                    ? "btn-post btn-primary btn-follow"
-                    : "btn-post btn-outline-primary btn-follow"
+                    ? "btn-post btn-primary"
+                    : "btn-post btn-outline-follow"
                 }
                 onClick={() =>
                   updateConnectionHandler({
