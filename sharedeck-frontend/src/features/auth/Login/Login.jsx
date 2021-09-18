@@ -73,6 +73,12 @@ const Login = () => {
           Create your account
         </Link>
       </p>
+
+      <div style={{ border: "1px solid #e5e5e5", padding: "1rem" }}>
+        <h4>Credentials to test the app if you don't want to sign up</h4>
+        <p>Email: test@gmail.com</p>
+        <p>Password: test123</p>
+      </div>
     </form>
   );
 };
