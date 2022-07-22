@@ -1,0 +1,9 @@
+.btn-reaction {
+  padding: 0.25rem 0.75rem;
+  margin-right: 1rem;
+}
+
+.btn-reacted {
+  border-radius: 0.25rem;
+  border: 3px solid var(--primary-color);
+}

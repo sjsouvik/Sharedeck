@@ -1,0 +1,62 @@
+.width-md {
+  width: 90%;
+  margin: auto;
+}
+
+.heading {
+  text-align: left;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+  font-weight: bold;
+}
+
+.avatar {
+  background-color: var(--primary-color);
+  border-radius: 50%;
+}
+
+.avatar-text {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  margin: 0.85rem 0;
+}
+
+.textarea-control {
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  width: 90%;
+  font-size: 1.2rem;
+  line-height: 1.75rem;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-post {
+  outline: none;
+  margin: 0.25rem;
+  padding: 0.35rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 1.5rem;
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+
+  /* border-radius: 1.5rem;
+  padding: 0.35rem 1.5rem; */
+}
+
+.btn-disable {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

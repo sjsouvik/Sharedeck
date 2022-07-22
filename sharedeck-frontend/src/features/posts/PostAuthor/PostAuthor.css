@@ -1,0 +1,22 @@
+.user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.user-id {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+.post-date {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
